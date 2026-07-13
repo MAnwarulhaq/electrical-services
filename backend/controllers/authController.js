@@ -6,15 +6,26 @@ const generateToken = require("../utils/generateToken");
 // @route   POST /api/auth/login
 // @access  Public
 const loginAdmin = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
+  let { email, password } = req.body;
+
+  // Clean input
+  email = email?.trim().toLowerCase();
+  password = password?.trim();
+
+  console.log("Login request email:", email);
 
   if (!email || !password) {
     res.status(400);
     throw new Error("Please provide email and password");
   }
 
-  const admin = await Admin.findOne({ email: email.toLowerCase() }).select(
-    "+password"
+  // Password is select:false in Admin model,
+  // so explicitly include it for authentication
+  const admin = await Admin.findOne({ email }).select("+password");
+
+  console.log(
+    "Admin found:",
+    admin ? admin.email : "No admin found"
   );
 
   if (!admin || !admin.isActive) {
@@ -24,13 +35,18 @@ const loginAdmin = asyncHandler(async (req, res) => {
 
   const isMatch = await admin.matchPassword(password);
 
+  console.log("Admin active:", admin.isActive);
+  console.log("Password matched:", isMatch);
+
   if (!isMatch) {
     res.status(401);
     throw new Error("Invalid email or password");
   }
 
-  res.json({
+  // Successful login
+  res.status(200).json({
     success: true,
+    message: "Login successful",
     data: {
       _id: admin._id,
       name: admin.name,
@@ -45,7 +61,13 @@ const loginAdmin = asyncHandler(async (req, res) => {
 // @route   GET /api/auth/profile
 // @access  Private
 const getAdminProfile = asyncHandler(async (req, res) => {
-  res.json({ success: true, data: req.admin });
+  res.status(200).json({
+    success: true,
+    data: req.admin,
+  });
 });
 
-module.exports = { loginAdmin, getAdminProfile };
+module.exports = {
+  loginAdmin,
+  getAdminProfile,
+};
