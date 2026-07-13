@@ -1,20 +1,11 @@
-import API from "./api";
+import api from "./api";
 
-
-export const getServices = async()=>{
-
-    const res = await API.get("/services");
-
-    return res.data;
-
+export const getServices = async (params = {}) => {
+  const { data } = await api.get("/services", { params });
+  return data;
 };
 
-
-
-export const getServiceBySlug = async(slug)=>{
-
-    const res = await API.get(`/services/${slug}`);
-
-    return res.data;
-
+export const getServiceBySlug = async (slug) => {
+  const { data } = await api.get(`/services/${slug}`);
+  return data;
 };
