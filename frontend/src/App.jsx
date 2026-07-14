@@ -10,9 +10,10 @@ import Booking from "./pages/Booking";
 import Contact from "./pages/Contact";
 import TrackBooking from "./pages/TrackBooking";
 import NotFound from "./pages/NotFound";
-
+import AdminBookings from "./admin/AdminBookings";
 import Login from "./admin/Login";
 import Dashboard from "./admin/Dashboard";
+import AdminLayout from "./admin/AdminLayout";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -43,6 +44,10 @@ function App() {
       <Route
         path="/admin"
         element={<Navigate to="/admin/dashboard" replace />}
+      />
+      <Route
+        path="/admin/bookings"
+        element={<AdminBookings />}
       />
 
       <Route path="*" element={<NotFound />} />
