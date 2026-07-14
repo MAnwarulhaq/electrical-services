@@ -63,17 +63,16 @@ const bookingSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: [
-        "pending",
-        "confirmed",
-        "electrician-assigned",
-        "on-the-way",
-        "in-progress",
-        "completed",
-        "cancelled",
+        "Pending",
+        "Confirmed",
+        "Electrician Assigned",
+        "On the Way",
+        "In Progress",
+        "Completed",
+        "Cancelled",
       ],
-      default: "pending",
+      default: "Pending",
     },
-
     assignedElectrician: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Electrician",
