@@ -15,6 +15,7 @@ import Login from "./admin/Login";
 import Dashboard from "./admin/Dashboard";
 import AdminLayout from "./admin/AdminLayout";
 import AdminServices from "./admin/AdminServices";
+import AdminElectricians from "./admin/AdminElectricians";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -53,6 +54,10 @@ function App() {
       <Route
         path="/admin/services"
         element={<AdminServices />}
+      />
+      <Route
+        path="/admin/electricians"
+        element={<AdminElectricians />}
       />
 
       <Route path="*" element={<NotFound />} />
