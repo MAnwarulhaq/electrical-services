@@ -14,6 +14,7 @@ import AdminBookings from "./admin/AdminBookings";
 import Login from "./admin/Login";
 import Dashboard from "./admin/Dashboard";
 import AdminLayout from "./admin/AdminLayout";
+import AdminServices from "./admin/AdminServices";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -48,6 +49,10 @@ function App() {
       <Route
         path="/admin/bookings"
         element={<AdminBookings />}
+      />
+      <Route
+        path="/admin/services"
+        element={<AdminServices />}
       />
 
       <Route path="*" element={<NotFound />} />
