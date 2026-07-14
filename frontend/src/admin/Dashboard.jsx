@@ -194,7 +194,7 @@ const Dashboard = () => {
               icon={<FaMapMarkerAlt />}
               label="Service Areas"
               onClick={() =>
-                navigate("/admin/areas")
+                navigate("/admin/service-areas")
               }
             />
 
