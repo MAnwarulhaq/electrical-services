@@ -7,7 +7,20 @@ const generateBookingId = require("../utils/generateBookingId");
 // @desc    Create a new booking (public)
 // @route   POST /api/bookings
 // @access  Public
+// @desc    Create a new booking
+// @route   POST /api/bookings
+// @access  Private (User)
+
 const createBooking = asyncHandler(async (req, res) => {
+  console.log("===== CREATE BOOKING =====");
+  console.log("Authenticated User:", req.user);
+
+  // Check authenticated user
+  if (!req.user) {
+    res.status(401);
+    throw new Error("User not authenticated");
+  }
+
   const {
     fullName,
     mobileNumber,
@@ -22,6 +35,7 @@ const createBooking = asyncHandler(async (req, res) => {
     serviceType,
   } = req.body;
 
+  // Validation
   if (
     !fullName ||
     !mobileNumber ||
@@ -36,42 +50,68 @@ const createBooking = asyncHandler(async (req, res) => {
     throw new Error("Please fill all required booking fields");
   }
 
-  // Validate references exist
+  // Check service exists
   const serviceExists = await Service.findById(service);
+
   if (!serviceExists) {
     res.status(404);
     throw new Error("Selected service not found");
   }
 
+  // Check area exists
   const areaExists = await ServiceArea.findById(area);
+
   if (!areaExists) {
     res.status(404);
     throw new Error("Selected area not found");
   }
 
+  // Generate booking id
   const bookingId = await generateBookingId();
 
+  // Create booking
   const booking = await Booking.create({
+    user: req.user._id,
+
     bookingId,
+
     fullName,
     mobileNumber,
     whatsappNumber,
     email: email || "",
+
     address,
+
     area,
     service,
+
     preferredDate,
     preferredTime,
+
     problemDescription: problemDescription || "",
-    serviceType: serviceType === "emergency" ? "emergency" : "normal",
+
+    serviceType:
+      serviceType === "emergency"
+        ? "emergency"
+        : "normal",
   });
 
+  // Populate response
   const populatedBooking = await Booking.findById(booking._id)
     .populate("service", "name startingPrice")
-    .populate("area", "name");
+    .populate("area", "name")
+    .populate("user", "fullName email mobileNumber");
 
-  res.status(201).json({ success: true, data: populatedBooking });
+  console.log("Generated Booking ID:", bookingId);
+  console.log("Populated Booking:", populatedBooking);
+
+  res.status(201).json({
+    success: true,
+    message: "Booking created successfully",
+    data: populatedBooking,
+  });
 });
+
 
 // @desc    Track a booking by Booking ID (public, limited info)
 // @route   GET /api/bookings/track/:bookingId
@@ -103,9 +143,9 @@ const trackBooking = asyncHandler(async (req, res) => {
       serviceType: booking.serviceType,
       assignedElectrician: booking.assignedElectrician
         ? {
-            name: booking.assignedElectrician.name,
-            status: booking.assignedElectrician.availabilityStatus,
-          }
+          name: booking.assignedElectrician.name,
+          status: booking.assignedElectrician.availabilityStatus,
+        }
         : null,
       createdAt: booking.createdAt,
     },

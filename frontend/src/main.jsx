@@ -3,16 +3,29 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 
 import App from "./App";
+
 import { AuthProvider } from "./context/AuthContext";
+import { UserAuthProvider } from "./context/UserAuthContext";
 
 import "./index.css";
+
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
+
+      {/* Admin Authentication */}
       <AuthProvider>
-        <App />
+
+        {/* User Authentication */}
+        <UserAuthProvider>
+
+          <App />
+
+        </UserAuthProvider>
+
       </AuthProvider>
+
     </BrowserRouter>
   </StrictMode>
 );

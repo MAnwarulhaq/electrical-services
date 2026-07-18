@@ -206,6 +206,14 @@ const Dashboard = () => {
                 navigate("/admin/messages")
               }
             />
+             <SidebarItem
+              icon={<FaEnvelope />}
+              label="Settings"
+              badge={stats.unreadMessages}
+              onClick={() =>
+                navigate("/admin/settings")
+              }
+            />
           </nav>
 
           <div className="p-4 border-t border-slate-800">
